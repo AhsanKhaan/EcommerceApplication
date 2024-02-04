@@ -41,13 +41,13 @@ router.post('/', getAllProducts, async (request, response) => {
 
   const { category } = request.body;
   let products;
-  console.log('ssss', category);
+  
   try {
     if(category){
       products = await Products.find({ category });
 
     }
-    products = await Products.find({});
+    products = await Products.find({}).select('-created_by -status');
 
     if (products?.length > 0) {
       return response.status(200).json({
@@ -140,7 +140,7 @@ router.post('/create', [auth(['vendor']), createProductValidation], async (reque
     await product.save();
 
     return response.status(200).json({
-      msg: 'Product Added in List Succesfully!',
+      msg: 'Product Added  Succesfully!',
     });
 
   } catch (error) {

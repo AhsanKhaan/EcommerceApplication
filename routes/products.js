@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const Products=require('../models/products');
-const { createQuestionsValidations, getAllProducts } = require('../validations/products');
+const { createProductValidation, getAllProducts } = require('../validations/products');
 /**
  * @swagger
  * tags:
@@ -88,10 +88,12 @@ router.post('/', getAllProducts, async (request, response) => {
  *       content:
  *         application/json:
  *           example:
- *             text: "What is your question?"
- *             options: [{ id: 1, text: "Option 1" }, { id: 2, text: "Option 2" }]
- *             correctOption: [1]
- *             courseType: "Math"
+ *             name: "Head Phone"
+ *             description: "This is Wireless Headphone"
+ *             price: 10
+ *             stock: 100
+ *             maxQuantityPerOrder: 2
+ *             category: "Electronics"
  *     responses:
  *       200:
  *         description: Successful response
@@ -101,26 +103,44 @@ router.post('/', getAllProducts, async (request, response) => {
  *               msg: "Product inserted Successfully!"
  *       400:
  *         description: Bad Request
+ *       403:
+ *         description: You Don't Have Access this Resource
  *       500:
  *         description: Internal server error
  */
 
-router.post('/create', [auth, createQuestionsValidations], async (request, response, next) => {
-  const { text, courseType } = request.body;
+router.post('/create', [auth(['vendor']), createProductValidation], async (request, response, next) => {
+  const { name,
+          description,
+          price,
+          images,
+          stock,
+          maxQuantityPerOrder,
+          category
+        } = request.body;
 
-  let question = await Question.findOne({ text, courseType });
-  if (question) {
+  let product = await Products.findOne({ name });
+  if (product) {
     return response.status(400).json({
-      msg: 'Question already exists',
+      msg: 'Product already exists',
     });
   }
 
   try {
-    question = new Question(request.body);
-    await question.save();
+    product = new Products({ 
+      name,
+      description,
+      price,
+      images,
+      stock,
+      maxQuantityPerOrder,
+      category,
+      created_by:request.user.id
+    });
+    await product.save();
 
     return response.status(200).json({
-      msg: 'Question inserted Succesfully! in course:  ' + courseType,
+      msg: 'Product Added in List Succesfully!',
     });
 
   } catch (error) {

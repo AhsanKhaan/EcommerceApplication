@@ -201,6 +201,9 @@ userLoginValidation,
       const payload = {
         user: {
           id: user.id,
+          role:user.role,
+          username:user.username,
+          email:user.email
         },
       };
 
@@ -411,6 +414,9 @@ userLoginValidation,
       const payload = {
         user: {
           id: user.id,
+          role: user.role,
+          username: user.username,
+          email: user.email
         },
       };
 

@@ -4,6 +4,7 @@ const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -21,12 +22,21 @@ const productSchema = new mongoose.Schema({
   },
   maxQuantityPerOrder: {
     type: Number,
-    default: 10,
+    default: 3,
   },
   category: {
     type: String,
     required: true,
   },
+  created_by:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Users',
+  },
+  status:{
+    type:String,
+    enum:['ACTIVE','INACTIVE','PENDING'],
+    default:'PENDING',
+  }
 });
 
 const Product = mongoose.model('Products', productSchema);

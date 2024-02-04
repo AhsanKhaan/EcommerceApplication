@@ -27,7 +27,7 @@ const swaggerDefinition = {
       Auth: [],
     },
   ],
-  basePath: '/',
+  basePath: 'localhost:8080/',
 };
 
 const options = {

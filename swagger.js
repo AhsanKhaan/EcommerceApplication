@@ -1,6 +1,7 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const express = require('express');
+const multer = require('multer');
 const YAML = require('yamljs');
 const fs = require('fs');
 
